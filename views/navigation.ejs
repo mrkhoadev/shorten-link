@@ -19,7 +19,7 @@
             onclick="window.open(this.href,'targetWindow','toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250');
                 return false;
             "
-            href="https://www.facebook.com/sharer/sharer.php?u=<%=hosting + '/' + data.url_id%>"
+            href=<%= "https://www.facebook.com/sharer/sharer.php?u=" + hosting + '/' + data.url_id%>
         >
             Chia sẻ lên Facebook
         </a>
