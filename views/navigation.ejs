@@ -1,0 +1,48 @@
+<div class="p-3 mx-auto" style="display: flex; flex-direction: column; gap: 20px; width: 500px;">
+    <div class="mx-auto w-100">
+        <% if (req?.msg) { %>
+          <div class="alert alert-success text-center mb-2" role="alert">
+            <%= req?.msg %>
+          </div>
+        <% } %>
+        <% if (req?.error) { %>
+          <div class="alert alert-danger text-center mb-2" role="alert">
+            <%= req?.error %>
+          </div>
+        <% } %>
+    </div>
+    <% if (req.isUnlock) { %>
+        <a href="<%= data.original_url %>" class="btn btn-warning">Nhấn vào để tiếp tục</a>
+        <a
+            class="btn btn-primary"
+            target="_blank"
+            onclick="window.open(this.href,'targetWindow','toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250');
+                return false;
+            "
+            href="https://www.facebook.com/sharer/sharer.php?u=<%=hosting + '/' + data.url_id%>"
+        >
+            Chia sẻ lên Facebook
+        </a>
+        <div>
+            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#qrModal">
+                Gửi tới điện thoại (QR code)
+            </button>
+            
+            <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <%- qrCode %>
+                </div>
+                </div>
+            </div>
+        </div>
+        <a href="/" class="btn btn-danger">Rút gọn liên kết mới</a>
+    <% } else { %>
+        <form action="" method="post">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="password" placeholder="Nhập mật khẩu...">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+        </form>
+    <% } %>
+</div>

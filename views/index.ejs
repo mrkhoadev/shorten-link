@@ -1,0 +1,265 @@
+<div class="p-3">
+    <h1>Hi, <%= user.name %></h1>
+    <p><a href="/logout" class="btn btn-danger">Đăng xuất</a></p>
+    <div>
+        <h1>Rút gọn liên kết</h1>
+        <p>Công cụ rút ngắn liên kết miễn phí, nhanh nhất</p>
+    </div>
+    <div class="mx-auto">
+        <% if (req?.msg) { %>
+          <div class="alert alert-success text-center mb-2" role="alert">
+            <%= req?.msg %>
+          </div>
+        <% } %>
+        <% if (req?.error) { %>
+          <div class="alert alert-danger text-center mb-2" role="alert">
+            <%= req?.error %>
+          </div>
+        <% } %>
+    </div>
+    <div class="d-flex" style="column-gap: 30px;">
+        <div style="overflow: auto; flex: 1; height: fit-content; max-height: 500px;">
+            <table class="table">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" width="5%" class="text-center">STT</th>
+                    <th scope="col">Liên kết rút gọn</th>
+                    <th scope="col">Liên kết gốc</th>
+                    <th scope="col" class="text-center"  style="min-width: 100px;">Mật khẩu</th>
+                    <th scope="col" class="text-center" style="min-width: 130px;">Lượt truy cập</th>
+                    <th scope="col" class="text-center" style="min-width: 140px;">Thời gian tạo</th>
+                    <th scope="col" class="text-center" style="min-width: 140px;">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (data.length > 0) { %>
+                    <% data.forEach((item, index) => { %>
+                      <tr>
+                        <th scope="row" class="text-center">1</th>
+                        <td class="w-1/2" style="min-width: 200px;">
+                          <a href="<%= hosting %>/<%= item.url_id %>" target="_blank">
+                            <%= hosting %>/<%= item.url_id %>
+                          </a>
+                        </td>
+                        <td class="w-1/2" style="min-width: 200px;">
+                          <a href="<%= item.original_url %>" target="_blank">
+                            <%= item.original_url %>
+                          </a>
+                        </td>
+                        <td width="10%" class="text-center">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#passwordModal<%= index %>">
+                                Xem
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="passwordModal<%= index %>" tabindex="-1" aria-labelledby="exampleModalLabel<%= index %>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel<%= index %>">Mật khẩu</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <input type="text" value="<%= item.password %>" readonly style="outline: none; padding: 10px; text-align: center; width: 100%;">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                          <%= item.visit_count %>
+                        </td>
+                        <td class="text-center">
+                          <%- getTime(item.created_at) %>
+                        </td>
+                        <td class="text-center">
+                          <div style="display: flex; justify-content: center; align-items: center; gap: 4px; height: 100%;">
+                            <!-- Begin edit -->
+                            <div>
+                              <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal<%= index %>" data-bs-whatever="@mdo">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                              </svg>
+                              </button>
+
+                              <div class="modal fade" id="editModal<%= index %>" tabindex="-1" aria-labelledby="editModalLabel<%= index %>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="editModalLabel<%= index %>">Sửa</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form style="text-align: left;" action="/edit" method="POST">
+                                      <div class="modal-body">
+                                        <input type="text" name="id" value="<%= item.id %>" hidden>
+                                        <div class="mb-3">
+                                          <label for="original_url<%= index %>" class="form-label">Liên kết mục tiêu</label>
+                                          <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            id="original_url<%= index %>" 
+                                            name="original_url" 
+                                            value="<%= item.original_url %>"
+                                            style="background-color: #f2f2f2; border-color: #e5e5e5; color: #b3b3b3;"
+                                            readonly
+                                          >
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="shortened-link<%= index %>" class="form-label">Liên kết rút gọn</label>
+                                          <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            id="shortened-link<%= index %>" 
+                                            name="shortenedLink" 
+                                            readonly
+                                            value="<%= hosting %>/<%= item.url_id %>"
+                                            style="background-color: #f2f2f2; border-color: #e5e5e5; color: #b3b3b3;"
+                                            >
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="password<%= index %>" class="form-label">Mật khẩu (tùy chọn)</label>
+                                          <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            id="password<%= index %>" 
+                                            name="password" 
+                                            value="<%= item.password %>"
+                                            placeholder="Nhập mật khẩu để mở khóa"
+                                            >
+                                          <span class="text-danger"><%= req?.errors?.password %></span>
+                                        </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- End Edit -->
+                            <button 
+                              class="btn btn-primary"
+                              onclick="shareOnFacebook('<%= hosting + '/' + item.url_id %>');"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16">
+                                    <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5"/>
+                                </svg>
+                            </button>
+                            <div>
+                              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal<%= index %>">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                </svg>
+                              </button>
+                              <!-- Modal -->
+                              <div class="modal fade" id="deleteModal<%= index %>" tabindex="-1" aria-labelledby="deleteModalLabel<%= index %>" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                      <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h1 class="modal-title fs-5" id="deleteModalLabel<%= index %>">Xóa</h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        Bạn có chắc chắn muốn xóa?
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                          <form action="/delete" method="post">
+                                            <input type="text" value="<%= item.id %>" name="id" hidden>
+                                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Đồng ý</button>
+                                          </form>
+                                      </div>
+                                      </div>
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="7" class="text-center">
+                        Không có dữ liệu!
+                      </td>
+                    </tr>
+                  <% } %>
+                </tbody>
+            </table>
+        </div>
+    
+        <form method="POST" style="width: 400px;">
+            <div class="mb-3">
+              <label for="link" class="form-label">Liên kết</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="link" 
+                name="link" 
+                placeholder="Rút gọn liên kết của bạn"
+                value="<%= req?.old?.link %>"
+              >
+              <span class="text-danger"><%= req?.errors?.link %></span>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Mật khẩu (tùy chọn)</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="password" 
+                name="password" 
+                placeholder="Nhập mật khẩu để mở khóa"
+                >
+              <span class="text-danger"><%= req?.errors?.password %></span>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="safe-redirect-url" name="safeRedirectUrl">
+                <label for="safe-redirect-url" class="form-check-lable">
+                    Chuyển hướng an toàn (Tránh bị chặn bởi Facebook)
+                </label>
+            </div>
+            <div class="mb-3">
+              <input
+                    type="checkbox"
+                    name="custom-link-checked"
+                    id="custom-link-checked"
+                    class="form-check-input"
+                />
+                <label for="custom-link-checked" class="form-check-lable">
+                  Tùy chỉnh ID liên kết
+                </label>
+              
+            </div>
+            <div class="my-3" id="custom-link-box">
+                <input type="text" class="form-control" id="custom-link-id" name="customLinkID" placeholder="ID tùy chỉnh (Không bắt buộc)">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Rút gọn</button>
+        </form>
+    </div>
+</div>
+<script>
+  function shareOnFacebook(url) {
+      const facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+      window.open(facebookUrl, 'targetWindow', 'toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250');
+  }
+  const inputChecked = document.querySelector("#custom-link-checked");
+  const inputBox = document.querySelector("#custom-link-box");
+
+  if (!inputChecked.checked) {
+    inputBox.style.display = "none";
+  } 
+
+  inputChecked.onchange = (e) => {
+    if (e.target.checked) {
+      inputBox.style.display = "block"; 
+    } else {
+      inputBox.style.display = "none"; 
+    }
+  };
+</script>
