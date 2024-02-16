@@ -19,7 +19,7 @@
             onclick="window.open(this.href,'targetWindow','toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250');
                 return false;
             "
-            href=<%= "https://www.facebook.com/sharer/sharer.php?u=" + hosting + '/' + data.url_id%>
+            href="https://www.facebook.com/sharer/sharer.php?u=<%=hosting + '/' + data.url_id%>"
         >
             Chia sẻ lên Facebook
         </a>
@@ -30,9 +30,15 @@
             
             <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
-                <div class="modal-content">
-                    <%- qrCode %>
-                </div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="qrModalLabel">QR CODE</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <%- qrCode %>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

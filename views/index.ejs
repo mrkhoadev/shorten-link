@@ -35,7 +35,7 @@
                   <% if (data.length > 0) { %>
                     <% data.forEach((item, index) => { %>
                       <tr>
-                        <th scope="row" class="text-center">1</th>
+                        <th scope="row" class="text-center"> <%= index + 1 %> </th>
                         <td class="w-1/2" style="min-width: 200px;">
                           <a href=<%="/" + item.url_id %> target="_blank">
                             <%= hosting + "/" + item.url_id %>
@@ -47,8 +47,9 @@
                           </a>
                         </td>
                         <td width="10%" class="text-center">
+                          <% if (item.password) { %>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#passwordModal<%= index %>">
-                                Xem
+                              Xem
                             </button>
                             <!-- Modal -->
                             <div class="modal fade" id="passwordModal<%= index %>" tabindex="-1" aria-labelledby="exampleModalLabel<%= index %>" aria-hidden="true">
@@ -67,6 +68,9 @@
                                     </div>
                                 </div>
                             </div>
+                          <% } else { %>
+                            (Không có)
+                          <% } %>
                         </td>
                         <td class="text-center">
                           <%= item.visit_count %>

@@ -20,7 +20,7 @@ module.exports = {
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       visit_count: {
         type: Sequelize.INTEGER,
@@ -28,7 +28,7 @@ module.exports = {
         allowNull: false,
       },
       safe_redirect_url: {
-        type: Sequelize.STRING,
+        type: Sequelize.BOOLEAN,
         defaultValue: false,
         allowNull: false,
       },

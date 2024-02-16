@@ -10,7 +10,11 @@ module.exports = {
         const data = await ShortenedLink.findAll({
             where: {
                 user_id: req.user.id,
-            }
+            },
+            order: [
+                ["id", "desc"],
+                ["created_at", "desc"]
+            ],
         })
         res.render("index", { req, user: req.user, data, hosting: process.env.HOSTING, getTime })
     },
@@ -30,9 +34,6 @@ module.exports = {
                             const regex = /^(https?:\/\/)?(www\.)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w.-?-]*)*\/?$/;
                             return regex.test(value);
                         }),
-                password: string()
-                    .min(4, "Mật khẩu phải có tối thiểu 4 ký tự")
-                    .required("Không được bỏ trống trường mật khẩu!"),
             })  
             if (isValidate) {
                 const {
@@ -118,8 +119,13 @@ module.exports = {
                 }, {
                     where: { id: data.id }
                 });
+                if (!data.safe_redirect_url) {
+                    return res.redirect(data.original_url);
+                }
                 const qrCode = await QRCode.toString(data.original_url,{type:'svg'});
-                if (token) {
+                if (data.safe_redirect_url && !data.password) {
+                    req.isUnlock = true;
+                } else if (token) {
                     const decoded = jwt.verify(token, process.env.JWT_SECRET);
                     const { url_id: decoded_url_id, exp } = decoded;
                     if (Date.now() <= exp * 1000 && decoded_url_id === url_id) {

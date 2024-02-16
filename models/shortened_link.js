@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     visit_count: {
       type: DataTypes.INTEGER,
@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     safe_redirect_url: {
-      type: DataTypes.STRING,
+      type: DataTypes.BOOLEAN,
       defaultValue: false,
       allowNull: false,
     },
