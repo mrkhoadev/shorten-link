@@ -99,6 +99,7 @@
                                     <form style="text-align: left;" action="/edit" method="POST">
                                       <div class="modal-body">
                                         <input type="text" name="id" value="<%= item.id %>" hidden>
+                                        <input type="text" name="url_id" value="<%= item.url_id %>" hidden>
                                         <div class="mb-3">
                                           <label for="original_url<%= index %>" class="form-label">Liên kết mục tiêu</label>
                                           <input 
@@ -134,6 +135,12 @@
                                             placeholder="Nhập mật khẩu để mở khóa"
                                             >
                                           <span class="text-danger"><%= req?.errors?.password %></span>
+                                        </div>
+                                        <div class="mb-3 form-check">
+                                          <input type="checkbox" class="form-check-input" id="safe-redirect-url-<%= index %>" name="safeRedirectUrl" <%= item.safe_redirect_url ? "checked" : "" %>>
+                                          <label for="safe-redirect-url-<%= index %>" class="form-check-lable">
+                                              Chuyển hướng an toàn (Tránh bị chặn bởi Facebook)
+                                          </label>
                                         </div>
                                       </div>
                                       <div class="modal-footer">

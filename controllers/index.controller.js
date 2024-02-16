@@ -82,25 +82,23 @@ module.exports = {
     },
     handleEdit: async (req, res, next) => {
         try {
-            if (!req.body.password) {
-                req.flash("error", "Lưu thất bại! Mật khẩu không được để trống")
-            } else if (req.body.password?.length < 4) {
-                req.flash("error", "Lưu thất bại! Mật khẩu phải tối thiểu 4 ký tự!")
-            } else {
-                const edit = await ShortenedLink.update({ 
-                    password: req.body.password
-                 }, {
-                    where: {
-                      id: req.body.id
-                    }
-                  });
-                  if (!edit) {
-                    throw new Error("Lỗi không tìm thấy data cần sửa!")
-                  }
-                  req.flash("msg", "Sửa thành công!")
-            }
-            
-              return res.redirect("/");
+            const edit = await ShortenedLink.update({ 
+                    password: req.body.password,
+                    safe_redirect_url: req.body.safeRedirectUrl === "on" ? true : false,
+                }, {
+                where: {
+                    id: req.body.id
+                }
+                });
+                if (!edit) {
+                throw new Error("Lỗi không tìm thấy data cần sửa!")
+                }
+                const token = req.cookies[req.body.url_id]; 
+                if (token) {
+                    res.clearCookie(req.body.url_id);
+                }
+                req.flash("msg", "Sửa thành công!");
+            return res.redirect("/");
         } catch (error) {
             return next(error);
         }
